@@ -7,7 +7,7 @@ use std::io::{
     Write,
 };
 
-use day1::day1a;
+use day1::day1;
 
 fn main() {
     loop {
@@ -15,7 +15,8 @@ fn main() {
         stdout().flush().unwrap();
         let value = stdin().lock().lines().next().unwrap().unwrap();
         match value.as_str() {
-            "1a" => day1a(),
+            "1a" => day1(1),
+            "1b" => day1(3),
             "exit" => break,
             _ => Ok(println!("Unknown option {value}")),
         };
