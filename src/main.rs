@@ -17,7 +17,7 @@ fn main() {
         match value.as_str() {
             "1a" => day1a(),
             "exit" => break,
-            _ => println!("Unknown option {value}"),
-        }
+            _ => Ok(println!("Unknown option {value}")),
+        };
     }
 }
