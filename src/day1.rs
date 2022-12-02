@@ -1,4 +1,3 @@
-use std::cmp::max;
 use std::error::Error;
 use std::fs;
 use std::str::Lines;
