@@ -1,5 +1,8 @@
-mod day1;
-mod day2;
+mod solvers;
+
+use solvers::{
+    day1, day2,
+};
 
 use std::error::Error;
 use std::io::{
@@ -8,9 +11,6 @@ use std::io::{
     stdout,
     Write,
 };
-
-use day1::day1;
-use day2::day2;
 
 fn main() -> Result<(), Box<dyn Error>> {
     loop {
