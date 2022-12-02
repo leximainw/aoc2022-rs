@@ -18,12 +18,12 @@ pub fn day2(know_meaning: bool) -> Result<(), Box<dyn Error>> {
             _ => return Err(Box::from("expect A, B, or C for opponent's choice")),
         };
         let choice = if know_meaning {
-            (match words[1] {
-                "X" => 2 - against,
-                "Y" => (3 - against) % 3,
-                "Z" => (4 - against) % 3,
+            match words[1] {
+                "X" => 2 - against + 1,
+                "Y" => (3 - against) % 3 + 1,
+                "Z" => (4 - against) % 3 + 1,
                 _ => return Err(Box::from("expect X, Y, or Z for player's choice")),
-            } + 1)
+            }
         } else {
             match words[1] {
                 "X" => 1,
