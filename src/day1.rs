@@ -12,8 +12,7 @@ fn read_elves(lines: Lines) -> Result<Vec<(i32, i32)>, Box<dyn Error>> {
             sum = 0;
             idx += 1;
         } else {
-            let datum = line.parse::<i32>()?;
-            sum += datum;
+            sum += line.parse::<i32>()?;
         }
     }
     elves.sort_by(|l, r| r.1.partial_cmp(&l.1).unwrap());
@@ -21,8 +20,7 @@ fn read_elves(lines: Lines) -> Result<Vec<(i32, i32)>, Box<dyn Error>> {
 }
 
 pub fn day1(best_n: usize) -> Result<(), Box<dyn Error>> {
-    let text = fs::read_to_string("inputs/day1.txt")?;
-    let elves = read_elves(text.lines())?;
+    let elves = read_elves(fs::read_to_string("inputs/day1.txt")?.lines())?;
     let mut sum = 0;
     for i in 0..best_n {
         sum += elves[i].1
