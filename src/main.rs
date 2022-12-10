@@ -1,7 +1,7 @@
 mod solvers;
 
 use solvers::{
-    day1, day2,
+    day1, day2, day3,
 };
 
 use std::error::Error;
@@ -22,6 +22,7 @@ fn main() -> Result<(), Box<dyn Error>> {
             "1b" => day1(3)?,
             "2a" => day2(false)?,
             "2b" => day2(true)?,
+            "3a" => day3()?,
             "exit" => break,
             _ => println!("Unknown option {value}"),
         };
