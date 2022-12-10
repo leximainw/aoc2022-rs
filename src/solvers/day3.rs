@@ -1,7 +1,10 @@
 use std::error::Error;
 use std::fs;
 
+const PRIORITY_MAP: &str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
 pub fn day3() -> Result<(), Box<dyn Error>> {
+    let mut priority_sum = 0;
     for line in fs::read_to_string("inputs/day3.txt")?.lines() {
         let chars: Vec<char> = line.chars().collect();
         let mut left = chars[0..chars.len() / 2].iter().collect::<Vec<&char>>();
@@ -22,7 +25,24 @@ pub fn day3() -> Result<(), Box<dyn Error>> {
                 right.pop();
             }
         }
-        println!("{common:?}")
+
+        let mut last = None;
+        while common.len() != 0 {
+            let curr = common.pop();
+            if curr == None {
+                break;
+            }
+            if curr != last {
+                last = curr;
+                if let Some(index) = PRIORITY_MAP.find(curr.unwrap()) {
+                    priority_sum += index + 1;
+                } else {
+                    return Err(Box::from(format!("found unexpected common item {}", curr.unwrap())));
+                }
+            }
+        }
     }
+
+    println!("{priority_sum}");
     Ok(())
 }
