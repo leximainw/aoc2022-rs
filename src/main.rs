@@ -22,7 +22,8 @@ fn main() -> Result<(), Box<dyn Error>> {
             "1b" => day1(3)?,
             "2a" => day2(false)?,
             "2b" => day2(true)?,
-            "3a" => day3()?,
+            "3a" => day3(2, true)?,
+            "3b" => day3(3, false)?,
             "exit" => break,
             _ => println!("Unknown option {value}"),
         };

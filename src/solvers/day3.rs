@@ -3,28 +3,68 @@ use std::fs;
 
 const PRIORITY_MAP: &str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-pub fn day3() -> Result<(), Box<dyn Error>> {
+pub fn day3(num_groups: usize, per_line: bool) -> Result<(), Box<dyn Error>> {
     let mut priority_sum = 0;
+    let mut groups: Vec<Vec<char>> = Vec::new();
     for line in fs::read_to_string("inputs/day3.txt")?.lines() {
-        let chars: Vec<char> = line.chars().collect();
-        let mut left = chars[0..chars.len() / 2].iter().collect::<Vec<&char>>();
-        let mut right = chars[chars.len() / 2..chars.len()].iter().collect::<Vec<&char>>();
-        let mut common = Vec::<char>::new();
-        left.sort();
-        right.sort();
-        while left.len() != 0 && right.len() != 0 {
-            let left_next = left[left.len() - 1];
-            let right_next = right[right.len() - 1];
-            if left_next < right_next {
-                right.pop();
-            } else if left_next > right_next {
-                left.pop();
-            } else {
-                common.push(*left_next);
-                left.pop();
-                right.pop();
+        if per_line {
+            let chars: Vec<char> = line.chars().collect();
+            let group_size = chars.len() / num_groups;
+            for group_id in 0..num_groups {
+                let group_start = group_id * group_size;
+                let mut group = chars[group_start..group_start + group_size]
+                    .iter().map(|x| *x).collect::<Vec<char>>();
+                if group.len() == 0 {
+                    continue;
+                }
+                group.sort();
+                groups.push(group);
+            }
+        } else {
+            let mut group = line.chars().collect::<Vec<char>>();
+            if group.len() == 0 {
+                continue;
+            }
+            group.sort();
+            groups.push(group);
+            if groups.len() != num_groups {
+                continue;
             }
         }
+        let mut common = Vec::<char>::new();
+        loop {
+            let mut max_value = None;
+            let mut max_index = None;
+            for i in 0..groups.len() {
+                let group = &groups[i];
+                let next = group[group.len() - 1];
+                if max_value == None || Some(next) > max_value {
+                    max_value = Some(next);
+                    max_index = Some(i);
+                }
+            }
+            let max_group = groups.remove(max_index.unwrap());
+            if max_group.len() == 0 {
+                break;
+            }
+            let test_char = max_group[max_group.len() - 1];
+            groups.push(max_group);
+            let mut test_count = 0;
+            for i in 0..groups.len() {
+                let mut group = &mut groups[i];
+                if group[group.len() - 1] == test_char {
+                    test_count += 1;
+                    group.pop();
+                }
+            }
+            if test_count == num_groups {
+                common.push(test_char);
+            }
+            if groups.iter().any(|x| x.len() == 0) {
+                break;
+            }
+        }
+        groups.clear();
 
         let mut last = None;
         while common.len() != 0 {
