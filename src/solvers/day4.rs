@@ -1,8 +1,9 @@
+use std::cmp::{max, min};
 use std::error::Error;
 use std::fs;
 use std::ops::Range;
 
-pub fn day4() -> Result<(), Box<dyn Error>> {
+pub fn day4(any_overlap: bool) -> Result<(), Box<dyn Error>> {
     let mut contained_count = 0;
     for line in fs::read_to_string("inputs/day4.txt")?.lines() {
         let ranges: Vec<&str> = line.split(',').collect();
@@ -11,8 +12,14 @@ pub fn day4() -> Result<(), Box<dyn Error>> {
         }
         let left_range = parse_range(ranges[0])?;
         let right_range = parse_range(ranges[1])?;
-        if left_range.start >= right_range.start && left_range.end <= right_range.end
-            || left_range.start <= right_range.start && left_range.end >= right_range.end {
+
+        let overlap = get_overlap(&left_range, &right_range);
+        if overlap == None {
+            continue;
+        }
+        if any_overlap
+            || overlap == Some(left_range.len())
+            || overlap == Some(right_range.len()) {
             contained_count += 1;
         }
     }
@@ -26,4 +33,14 @@ pub fn parse_range(range: &str) -> Result<Range<usize>, Box<dyn Error>> {
         return Err(Box::from(format!("expected 2 endpoints, but got {}", endpoints.len())));
     }
     Ok(str::parse(endpoints[0])?..str::parse(endpoints[1])?)
+}
+
+pub fn get_overlap(left: &Range<usize>, right: &Range<usize>) -> Option<usize> {
+    let left = left.start..left.end + 1;
+    let right = right.start..right.end + 1;
+    let overlap_start = max(left.start, right.start);
+    let overlap_end = min(left.end, right.end);
+    if overlap_start < overlap_end {
+        Some(overlap_end - overlap_start - 1)
+    } else { None }
 }
